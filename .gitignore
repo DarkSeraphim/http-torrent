@@ -3,4 +3,5 @@ bazel-genfiles/
 bazel-http-torrent/
 bazel-out/
 bazel-testlogs/
+bazel-*/
 

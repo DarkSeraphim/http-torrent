@@ -1,10 +1,11 @@
 #ifndef __HTTP_RESPONSE_H_
 #define __HTTP_RESPONSE_H_
 
-#include "base.h"
-
 #include <map>
 #include <vector>
+
+#include "body.h"
+#include "header.h"
 
 namespace http {
     class Response {
@@ -25,13 +26,9 @@ namespace http {
 
           const string GetReason();
 
-          const vector<string>::const_iterator GetHeadersBegin(string key);
-          
-          const vector<string>::const_iterator GetHeadersEnd(string key);
-          
-          const string GetFirstHeader(string key);
+          const Header GetHeader(const string& key) const;
 
-          const vector<char>::const_iterator GetBody();
+          const Body GetBody() const;
     };
 }
 

@@ -5,7 +5,8 @@
 #include <memory>
 #include <vector>
 
-#include "base.h"
+#include "body.h"
+#include "header.h"
 
 namespace http {
 	
@@ -27,9 +28,9 @@ namespace http {
 	   
 	   const string GetPath() const;
 	   
-	   const Headers GetHeaders() const;
+	   const Header GetHeader(const string& key) const;
 	   
-     const Body GetBody() const;
+       const Body GetBody() const;
 	};
 }
 

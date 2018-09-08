@@ -2,7 +2,7 @@
 
 namespace http {
 
-	Request::Request(string method, string path, map<string, string> headers, vector<char> body)
+	Request::Request(string method, string path, map<string, vector<string>> headers, vector<char> body)
 	  : headers(move(headers)), body(move(body)) {
 	    this->method = method;
 	    this->path = path;
@@ -11,28 +11,24 @@ namespace http {
     Request::~Request() {
     }
    
-    const string Request::GetMethod() {
+    const string Request::GetMethod() const {
     	  return this->method;
     }
    
-    const string Request::GetPath() {
+    const string Request::GetPath() const {
     	  return this->path;
     }
-   
-    const string Request::GetHeader(string key) {
-        map<string, string>::iterator it;
+
+    const Header Request::GetHeader(const string& key) const {
+        map<string, vector<string>>::const_iterator it;
         it = this->headers.find(key);
         if (it != this->headers.end()) {
-            return it->second;
+            return Header(it->second);
         }
-        return nullptr;
+        return Header({});
     }
-   
-    vector<char>::const_iterator Request::BodyBegin() const {
-        return this->body.cbegin();
-    }
-       
-    vector<char>::const_iterator Request::BodyEnd() const {
-        return this->body.cend();
+
+    const Body Request::GetBody() const {
+        return Body(this->body);
     }
 }

@@ -10,18 +10,28 @@
 #include <vector>
 #include <string>
 
+#include <chrono>
+#include <thread>
+
 using namespace std;
 
 void read_stream(int fd, vector<char>& buffer, int block_size = 64)
 {
     char buf[block_size] = {0};
     int len;
+    using namespace std::chrono;
+
+    printf("Start reading\n");
+    high_resolution_clock::time_point t1 = high_resolution_clock::now();
     while ((len = read(fd, buf, block_size)) > 0)
     {
-        printf("Got %d\n", buf[len - 1]);
+        high_resolution_clock::time_point t2 = high_resolution_clock::now();
+        duration<double, std::milli> time_span = t2 - t1;
+        printf("Read %d bytes in %f milliseconds\n", len, time_span.count());
         buffer.assign(buf, buf + len);
-        printf("Got %s\n", buf);
+        t1 = high_resolution_clock::now();
     }
+    printf("End reading\n");
 }
 
 int server()
@@ -99,9 +109,12 @@ int client()
         printf("Connection failed\n");
         return -1;
     }
-    char msg[] = "Hello Server";
+    char msg[92] = {0};
+    for (int i = 0; i < 92; i++) msg[i] = i;
     char buffer[1024] = {0};
-    send(client_fd, msg, strlen(msg), 0);
+    send(client_fd, msg, 92 * sizeof(char), 0);
+    printf("Now waiting 30s\n");
+    std::this_thread::sleep_for(std::chrono::milliseconds(30000));
     int vsize = read(client_fd, buffer, 1024);
     printf("%s\n", buffer);
     close(client_fd);
